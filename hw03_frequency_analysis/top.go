@@ -5,8 +5,8 @@ import (
 )
 
 // filter input text for additional task.
-// regular expression if prefer for replace symbols.
 func filterAsterisk(input string) string {
+	// regular expression if prefer for replace symbols.
 	input = strings.ReplaceAll(input, ".", "")
 	input = strings.ReplaceAll(input, "\"", "")
 	input = strings.ReplaceAll(input, ",", "")
