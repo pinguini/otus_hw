@@ -4,9 +4,9 @@ import (
 	"strings"
 )
 
-// filter input text for additional task
+// filter input text for additional task.
 func filterAsterisk(input string) string {
-	// regular expression if prefer for replace symbols
+	// regular expression if prefer for replace symbols.
 	input = strings.ReplaceAll(input,".","")
 	input = strings.ReplaceAll(input,"\"","")
 	input = strings.ReplaceAll(input,",","")
@@ -14,19 +14,19 @@ func filterAsterisk(input string) string {
 	input = strings.ReplaceAll(input,"!","")
 	input = strings.ReplaceAll(input," - "," ")
 
-	//to lower all text now
+	// to lower all text now
 	input = strings.ToLower(input)
 
 	return input
 }
 
-//word struct
+// word struct
 type Word struct{
 	Text string
 	Counter int
 }
 
-//search word index in slice of Word, return index
+// search word index in slice of Word, return index
 func searchWord(text string, words []Word) int {
 	for i, woritem :=range(words){
 		if woritem.Text==text {
@@ -36,7 +36,7 @@ func searchWord(text string, words []Word) int {
 	return -1
 }
 
-//search word index with max counter in slice of Word, return index
+// search word index with max counter in slice of Word, return index
 func searchMax(words []Word) int {
 	index:=-1
 	for i, wordItem := range(words){
@@ -55,7 +55,6 @@ func searchMax(words []Word) int {
 }
 
 func Top10(text string) []string {
-
 	// just comment string below for standart task
 	text = filterAsterisk(text)
 
@@ -63,7 +62,7 @@ func Top10(text string) []string {
 	// fill slice of Word
 	for _, wordText := range (strings.Fields(text)) {
 		if wordIndex:=searchWord(wordText,words); wordIndex>=0 {
-			words[wordIndex].Counter += 1
+			words[wordIndex].Counter ++
 		}else{
 			words=append(words, Word{wordText,1})
 		}
