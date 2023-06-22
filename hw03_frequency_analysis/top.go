@@ -7,12 +7,12 @@ import (
 // filter input text for additional task.
 // regular expression if prefer for replace symbols.
 func filterAsterisk(input string) string {
-	input = strings.ReplaceAll(input,".","")
-	input = strings.ReplaceAll(input,"\"","")
-	input = strings.ReplaceAll(input,",","")
-	input = strings.ReplaceAll(input,"?","")
-	input = strings.ReplaceAll(input,"!","")
-	input = strings.ReplaceAll(input," - "," ")
+	input = strings.ReplaceAll(input, ".", "")
+	input = strings.ReplaceAll(input, "\"", "")
+	input = strings.ReplaceAll(input, ",", "")
+	input = strings.ReplaceAll(input, "?", "")
+	input = strings.ReplaceAll(input, "!", "")
+	input = strings.ReplaceAll(input, " - ", " ")
 
 	// to lower all text now
 	input = strings.ToLower(input)
@@ -21,15 +21,15 @@ func filterAsterisk(input string) string {
 }
 
 // word struct.
-type Word struct{
-	Text string
+type Word struct {
+	Text    string
 	Counter int
 }
 
 // search word index in slice of Word, return index.
 func searchWord(text string, words []Word) int {
-	for i, woritem :=range(words){
-		if woritem.Text==text {
+	for i, woritem := range words {
+		if woritem.Text == text {
 			return i
 		}
 	}
@@ -38,17 +38,17 @@ func searchWord(text string, words []Word) int {
 
 // search word index with max counter in slice of Word, return index.
 func searchMax(words []Word) int {
-	index:=-1
-	for i, wordItem := range(words){
-		if wordItem.Counter>0 && index==-1 {
+	index := -1
+	for i, wordItem := range words {
+		if wordItem.Counter > 0 && index == -1 {
 			// if word has reseted counter do not use it
-			index=i
+			index = i
 		}
-		if index>=0 && wordItem.Counter > words[index].Counter {
-			index=i
+		if index >= 0 && wordItem.Counter > words[index].Counter {
+			index = i
 		}
-		if index>=0 && wordItem.Counter == words[index].Counter && strings.Compare(wordItem.Text,words[index].Text) <0 {
-			index=i
+		if index >= 0 && wordItem.Counter == words[index].Counter && strings.Compare(wordItem.Text, words[index].Text) < 0 {
+			index = i
 		}
 	}
 	return index
@@ -60,22 +60,22 @@ func Top10(text string) []string {
 
 	words := []Word{}
 	// fill slice of Word
-	for _, wordText := range (strings.Fields(text)) {
-		if wordIndex:=searchWord(wordText,words); wordIndex>=0 {
-			words[wordIndex].Counter ++
-		}else{
-			words=append(words, Word{wordText,1})
+	for _, wordText := range strings.Fields(text) {
+		if wordIndex := searchWord(wordText, words); wordIndex >= 0 {
+			words[wordIndex].Counter++
+		} else {
+			words = append(words, Word{wordText, 1})
 		}
 	}
 
-	result := []string {}
+	result := []string{}
 
-	for  i := 0; i < 10; i++{
-		index:=searchMax(words)
+	for i := 0; i < 10; i++ {
+		index := searchMax(words)
 		// search index and reset its counter
-		if index>=0 {
-			words[index].Counter=0
-			result=append(result,words[index].Text)
+		if index >= 0 {
+			words[index].Counter = 0
+			result = append(result, words[index].Text)
 		}
 	}
 	return result
