@@ -5,8 +5,8 @@ import (
 )
 
 // filter input text for additional task.
+// regular expression if prefer for replace symbols.
 func filterAsterisk(input string) string {
-	// regular expression if prefer for replace symbols.
 	input = strings.ReplaceAll(input,".","")
 	input = strings.ReplaceAll(input,"\"","")
 	input = strings.ReplaceAll(input,",","")
@@ -20,13 +20,13 @@ func filterAsterisk(input string) string {
 	return input
 }
 
-// word struct
+// word struct.
 type Word struct{
 	Text string
 	Counter int
 }
 
-// search word index in slice of Word, return index
+// search word index in slice of Word, return index.
 func searchWord(text string, words []Word) int {
 	for i, woritem :=range(words){
 		if woritem.Text==text {
@@ -36,7 +36,7 @@ func searchWord(text string, words []Word) int {
 	return -1
 }
 
-// search word index with max counter in slice of Word, return index
+// search word index with max counter in slice of Word, return index.
 func searchMax(words []Word) int {
 	index:=-1
 	for i, wordItem := range(words){
