@@ -1,82 +1,45 @@
 package hw03frequencyanalysis
 
 import (
+	"regexp"
+	"sort"
 	"strings"
 )
 
 // filter input text for additional task.
 func filterAsterisk(input string) string {
-	// regular expression if prefer for replace symbols.
-	input = strings.ReplaceAll(input, ".", "")
-	input = strings.ReplaceAll(input, "\"", "")
-	input = strings.ReplaceAll(input, ",", "")
-	input = strings.ReplaceAll(input, "?", "")
-	input = strings.ReplaceAll(input, "!", "")
-	input = strings.ReplaceAll(input, " - ", " ")
-
-	// to lower all text now
-	input = strings.ToLower(input)
-
+	// remove punctuation and do not forget about " -"
+	re := regexp.MustCompile(`[.,!?\'\"]|(\s+\-)`)
+	input = strings.ToLower(re.ReplaceAllString(input, " "))
 	return input
-}
-
-// word struct.
-type Word struct {
-	Text    string
-	Counter int
-}
-
-// search word index in slice of Word, return index.
-func searchWord(text string, words []Word) int {
-	for i, woritem := range words {
-		if woritem.Text == text {
-			return i
-		}
-	}
-	return -1
-}
-
-// search word index with max counter in slice of Word, return index.
-func searchMax(words []Word) int {
-	index := -1
-	for i, wordItem := range words {
-		if wordItem.Counter > 0 && index == -1 {
-			// if word has reseted counter do not use it
-			index = i
-		}
-		if index >= 0 && wordItem.Counter > words[index].Counter {
-			index = i
-		}
-		if index >= 0 && wordItem.Counter == words[index].Counter && strings.Compare(wordItem.Text, words[index].Text) < 0 {
-			index = i
-		}
-	}
-	return index
 }
 
 func Top10(text string) []string {
 	// just comment string below for standart task
 	text = filterAsterisk(text)
 
-	words := []Word{}
+	words := map[string]int{}
+	keys := []string{}
+
 	// fill slice of Word
 	for _, wordText := range strings.Fields(text) {
-		if wordIndex := searchWord(wordText, words); wordIndex >= 0 {
-			words[wordIndex].Counter++
+		_, ok := words[wordText]
+		if ok {
+			words[wordText]++
 		} else {
-			words = append(words, Word{wordText, 1})
+			words[wordText] = 1
+			keys = append(keys, wordText)
 		}
 	}
 
-	result := []string{}
+	// sort by count and alphabetical
+	sort.SliceStable(keys, func(i, j int) bool {
+		return words[keys[i]] > words[keys[j]] || (words[keys[i]] == words[keys[j]] && strings.Compare(keys[j], keys[i]) > 0)
+	})
 
-	for i := 0; i < 10; i++ {
-		index := searchMax(words)
-		// search index and reset its counter
-		if index >= 0 {
-			words[index].Counter = 0
-			result = append(result, words[index].Text)
-		}
+	// if slice more than 10 - cut it
+	if len(keys) > 10 {
+		keys = keys[0:10]
 	}
-	return result
+	return keys
 }
