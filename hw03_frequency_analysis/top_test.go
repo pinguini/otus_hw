@@ -79,4 +79,20 @@ func TestTop10(t *testing.T) {
 			require.Equal(t, expected, Top10(text))
 		}
 	})
+
+	t.Run("uniq words less than 10 ", func(t *testing.T) {
+		text := "one two three four four four six"
+		expected := []string{
+			"four",
+			"one",
+			"six",
+			"three",
+			"two",
+		}
+		require.Equal(t, expected, Top10(text))
+	})
+
+	t.Run("no words in empty string", func(t *testing.T) {
+		require.Len(t, Top10("- , ! -- "), 0)
+	})
 }

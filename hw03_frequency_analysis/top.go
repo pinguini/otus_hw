@@ -9,7 +9,7 @@ import (
 // filter input text for additional task.
 func filterAsterisk(input string) string {
 	// remove punctuation and do not forget about " -"
-	re := regexp.MustCompile(`[.,!?\'\"]|(\s+\-)`)
+	re := regexp.MustCompile(`[.,!?\'\"]|(\s+\-)|(\-\s+)`)
 	input = strings.ToLower(re.ReplaceAllString(input, " "))
 	return input
 }
@@ -34,12 +34,14 @@ func Top10(text string) []string {
 
 	// sort by count and alphabetical
 	sort.SliceStable(keys, func(i, j int) bool {
-		return words[keys[i]] > words[keys[j]] || (words[keys[i]] == words[keys[j]] && strings.Compare(keys[j], keys[i]) > 0)
+		wordI, wordJ := keys[i], keys[j]
+		return words[wordI] > words[wordJ] ||
+			(words[wordI] == words[wordJ] && strings.Compare(wordJ, wordI) > 0)
 	})
 
 	// if slice more than 10 - cut it
 	if len(keys) > 10 {
-		keys = keys[0:10]
+		keys = keys[:10]
 	}
 	return keys
 }
