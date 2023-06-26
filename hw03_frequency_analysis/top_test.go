@@ -92,7 +92,7 @@ func TestTop10(t *testing.T) {
 		require.Equal(t, expected, Top10(text))
 	})
 
-	t.Run("no words in empty string", func(t *testing.T) {
-		require.Len(t, Top10("- , ! -- "), 0)
+	t.Run("no words in string with punctuation", func(t *testing.T) {
+		require.Len(t, Top10("- , ! - ? -"), 0)
 	})
 }
