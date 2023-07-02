@@ -3,6 +3,7 @@ package hw04lrucache
 import (
 	"sync"
 )
+
 type Key string
 
 type Cache interface {
@@ -15,33 +16,33 @@ type lruCache struct {
 	capacity int
 	queue    List
 	items    map[Key]*ListItem
-	mu			 sync.Mutex
+	mu       sync.Mutex
 }
 
-func (c *lruCache) Set(key Key,value interface{}) bool {
+func (c *lruCache) Set(key Key, value interface{}) bool {
 	c.mu.Lock()
-  exists:=false
+	exists := false
 	val, ok := c.items[key]
 	if ok {
 		c.queue.Remove(val)
-		exists=true
+		exists = true
 	}
 
-	c.items[key]=c.queue.PushFront(value)
-	if c.queue.Len() > c.capacity{
-		last:=c.queue.Back()
+	c.items[key] = c.queue.PushFront(value)
+	if c.queue.Len() > c.capacity {
+		last := c.queue.Back()
 		c.queue.Remove(last)
 		for k := range c.items {
-			if c.items[k]==last{
+			if c.items[k] == last {
 				delete(c.items, k)
-			} 
+			}
 		}
 	}
 	c.mu.Unlock()
 	return exists
 }
 
-func (c *lruCache) Get(key Key) (interface{},bool) {
+func (c *lruCache) Get(key Key) (interface{}, bool) {
 	c.mu.Lock()
 	val, ok := c.items[key]
 	if ok {
@@ -57,7 +58,7 @@ func (c *lruCache) Clear() {
 	c.mu.Lock()
 	for item := range c.items {
 		c.queue.Remove(c.items[item])
-    delete(c.items, item)
+		delete(c.items, item)
 	}
 	c.mu.Unlock()
 }

@@ -15,22 +15,22 @@ func TestList(t *testing.T) {
 		require.Nil(t, l.Back())
 	})
 
-	t.Run("fill and empty",func(t *testing.T) {
+	t.Run("fill and empty", func(t *testing.T) {
 		l := NewList()
 
 		l.PushFront(10) // [10]
 		l.PushBack(20)  // [10, 20]
 		l.PushBack(30)  // [10, 20, 30]
 
-		//rm mid
-		l.Remove(l.Front().Next)    // [10, 30]
-		l.Remove(l.Front())         // [30]
-		l.Remove(l.Back())          // []
+		// rm mid
+		l.Remove(l.Front().Next) // [10, 30]
+		l.Remove(l.Front())      // [30]
+		l.Remove(l.Back())       // []
 
 		require.Equal(t, 0, l.Len())
-		require.Nil(t,l.Front())
-		require.Nil(t,l.Back())
-		
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+
 	})
 
 	t.Run("complex", func(t *testing.T) {
