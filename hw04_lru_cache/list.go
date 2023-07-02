@@ -29,9 +29,11 @@ func (l list) Len() int {
 func (l list) Front() *ListItem {
 	return l.head
 }
+
 func (l list) Back() *ListItem {
 	return l.tail
 }
+
 func (l *list) PushFront(v interface{}) *ListItem {
 	li := ListItem{Value: v, Prev: nil, Next: l.head}
 	if l.head != nil {
@@ -45,6 +47,7 @@ func (l *list) PushFront(v interface{}) *ListItem {
 	l.len++
 	return &li
 }
+
 func (l *list) PushBack(v interface{}) *ListItem {
 	li := ListItem{Value: v, Prev: l.tail, Next: nil}
 
