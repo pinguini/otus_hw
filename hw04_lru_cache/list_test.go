@@ -32,6 +32,28 @@ func TestList(t *testing.T) {
 		require.Nil(t, l.Back())
 	})
 
+	t.Run("check for belongin listitem to list on remove", func(t *testing.T) {
+		la := NewList()
+		lb := NewList()
+
+		laI := la.PushFront(10)
+		for v := range [...]int{40, 50, 60, 70, 80} {
+			lb.PushFront(v)
+		}
+
+		lb.Remove(la.Front())
+		require.Equal(t, 5, lb.Len())
+
+		require.Equal(t, 1, la.Len())
+		require.Equal(t, laI, la.Front())
+
+		la.Remove(la.Front())
+		require.Equal(t, 0, la.Len())
+
+		la.Remove(la.Front())
+		require.Equal(t, 0, la.Len())
+	})
+
 	t.Run("complex", func(t *testing.T) {
 		l := NewList()
 

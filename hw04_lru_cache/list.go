@@ -17,9 +17,10 @@ type ListItem struct {
 }
 
 type list struct {
-	len  int
-	head *ListItem
-	tail *ListItem
+	len   int
+	head  *ListItem
+	tail  *ListItem
+	items map[*ListItem]bool
 }
 
 func (l list) Len() int {
@@ -45,6 +46,7 @@ func (l *list) PushFront(v interface{}) *ListItem {
 	}
 	l.head = &li
 	l.len++
+	l.items[l.head] = true
 	return &li
 }
 
@@ -60,23 +62,32 @@ func (l *list) PushBack(v interface{}) *ListItem {
 	}
 	l.tail = &li
 	l.len++
+	l.items[l.tail] = true
 	return &li
 }
 
 func (l *list) Remove(li *ListItem) {
-	if l.head == li {
-		l.head = li.Next
+	// вообще нужно проверять что элемент, который удаляем вообще находится в этом списке
+	// а не только проверять не больше ли нуля список (там утечки памяти, не очевидное поведение и тд и тп)
+	// я не знаю что быстрее использовать ссылку на объект в качестве ключа мапы или таки обхот всего списка
+	// решил попровбовать пока так
+	val, ok := l.items[li]
+	if ok && val {
+		if l.head == li {
+			l.head = li.Next
+		}
+		if l.tail == li {
+			l.tail = li.Prev
+		}
+		if li.Next != nil {
+			li.Next.Prev = li.Prev
+		}
+		if li.Prev != nil {
+			li.Prev.Next = li.Next
+		}
+		l.len--
+		delete(l.items, li)
 	}
-	if l.tail == li {
-		l.tail = li.Prev
-	}
-	if li.Next != nil {
-		li.Next.Prev = li.Prev
-	}
-	if li.Prev != nil {
-		li.Prev.Next = li.Next
-	}
-	l.len--
 }
 
 func (l *list) MoveToFront(li *ListItem) {
@@ -85,5 +96,5 @@ func (l *list) MoveToFront(li *ListItem) {
 }
 
 func NewList() List {
-	return new(list)
+	return &list{0, nil, nil, make(map[*ListItem]bool)}
 }
